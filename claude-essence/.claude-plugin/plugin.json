@@ -1,0 +1,11 @@
+{
+  "name": "claude-essence",
+  "version": "0.2.0",
+  "description": "Personal Claude toolset - output styles, skills, and self-evolving commands",
+  "author": {
+    "name": "Brian Lai",
+    "url": "https://github.com/blai"
+  },
+  "repository": "https://github.com/blai/claude-essence",
+  "license": "MIT"
+}

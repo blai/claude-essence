@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Claude plugin cache (installed copies live in ~/.claude/plugins/cache/)
+.claude-plugin/cache/
+*.cache
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (if any tooling is added)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Python (if any tooling is added)
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Local secrets / env
+.env
+.env.local

@@ -1,0 +1,11 @@
+{
+  "name": "md-quality",
+  "version": "1.1.0",
+  "description": "Markdown documentation quality skills — AI-consumable doc validation and human-readable doc style",
+  "author": {
+    "name": "Brian Lai",
+    "url": "https://github.com/blai"
+  },
+  "repository": "https://github.com/blai/claude-essence",
+  "license": "MIT"
+}
