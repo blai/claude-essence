@@ -1,8 +1,16 @@
 ---
 name: ai-doc-quality
 description: >
-  Enforce AI doc principles on any SKILL.md, command, agent, or AI-consumable markdown.
-  Apply when writing, updating, or reviewing AI-consumable docs to catch RFC 2119 violations, missing triggers, duplicates, and metadata issues.
+  This skill should be used when the user asks to "validate a skill",
+  "audit a SKILL.md", "check AI doc quality", "review AI documentation",
+  "enforce RFC 2119", "catch passive voice in a command", "check
+  ai-doc principles", "lint this skill", or needs to review any
+  AI-consumable markdown — SKILL.md, commands, agents, hooks, or
+  CLAUDE.md files. Apply proactively after writing or updating
+  AI-consumable docs to catch RFC 2119 violations, missing triggers,
+  duplicates, and metadata issues.
+  Does NOT validate semantic correctness, logical consistency, or domain accuracy.
+model: haiku
 version: 3.0.0
 dependencies:
   - type: document

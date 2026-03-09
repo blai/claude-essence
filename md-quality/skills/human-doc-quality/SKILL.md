@@ -1,159 +1,176 @@
 ---
 name: human-doc-quality
 description: >
-  Guide human-readable documentation with active voice, specific language, and concise sentences.
-  Use when: writing or reviewing README, docs/*, roadmaps, or any human-facing markdown.
-version: 1.1.0
+  This skill should be used when the user asks to "review my README",
+  "improve my docs", "check writing quality", "clean up this roadmap",
+  "make this more concise", "fix passive voice in my docs", "edit this
+  plan for clarity", or "improve human-readable documentation".
+  Apply when writing or reviewing README, docs/*, roadmap, story, or
+  plan markdown for a human audience.
+  Does NOT apply to AI-consumable files — SKILL.md, commands, agents,
+  hooks, or CLAUDE.md — use ai-doc-quality for those.
+model: haiku
+version: 2.0.0
 ---
 
-# Human Documentation Quality
+# Skill: human-doc-quality
 
 ## Scope
 
-These are defaults, not absolute rules. Apply judgment — a guideline that produces awkward prose in a specific context should yield to clarity.
+Enforces active voice, concision, and specificity in human-readable markdown. Applies to README, docs/*, roadmaps, story files, and plan files.
+
+Does NOT apply to AI-consumable files (SKILL.md, commands, agents, hooks, CLAUDE.md) — those follow different rules enforced by `ai-doc-quality`.
+
+## Output Format
+
+Return a list of violations grouped by principle, each with:
+- **line** (string): quoted sentence or phrase
+- **issue** (string): principle violated
+- **fix** (string): corrected version
+
+Then output the full revised text with all fixes applied.
+
+## Revision Rules
+
+Fix style violations only. Do NOT invent missing content.
+
+When a violation is vague language (e.g., "various changes"), the fix is a placeholder: `[describe specific changes]`. Do not supply technical details that aren't in the original. The author supplies substance; this skill supplies style.
 
 ## Style Principles
 
 ### 1. Active Voice
 
-Default to active voice. Passive is appropriate when the agent is unknown, irrelevant, or when the result matters more than who did it.
+Use active voice. Passive constructions hide the actor and add words.
 
-**Good:** "The system validates input"
-**Bad:** "Input is validated by the system" (agent known and relevant)
-**OK passive:** "The token is hashed before storage" (process-focused; agent is implementation detail)
+**Good:** "The team implemented the feature."
+**Bad:** "The feature was implemented by the team."
+
+**Common passive patterns to rewrite:**
+- "X was done by Y" → "Y did X"
+- "X is handled by" → "Y handles X"
+- "X will be updated" → "Update X" (imperative) or "Y updates X"
 
 ### 2. Omit Needless Words
 
-Remove words that add no meaning.
+Remove phrases that add length without meaning.
 
-**Good:** "To validate input"
-**Bad:** "In order to validate the input"
-
-**Common needless phrases:**
-- "in order to" → "to"
-- "due to the fact that" → "because"
-- "at this point in time" → "now"
-- "for the purpose of" → "for"
-- "in the event that" → "if"
+| Wordy | Concise |
+|-------|---------|
+| in order to | to |
+| due to the fact that | because |
+| at this point in time | now |
+| for the purpose of | for |
+| in the event that | if |
+| it is important to note that | (delete) |
+| please be advised that | (delete) |
 
 ### 3. Specific Language
 
-Use specific numbers, not vague quantifiers.
+Replace vague quantifiers with numbers or observable facts.
 
-**Good:** "Process 1000 requests per second"
-**Bad:** "Process many requests quickly"
+**Good:** "Process 1000 requests per second."
+**Bad:** "Process many requests quickly."
 
-**Avoid:** many, few, some, several, soon, later, eventually
+**Avoid:** many, few, some, several, soon, later, eventually, various, numerous
 
 ### 4. Direct Tone
 
-Avoid epistemic hedging — words that signal the writer is unsure of their own content. These undermine credibility.
+State facts. Avoid hedging.
 
-**Bad (epistemic hedging):** "The system seems to validate input" / "It might possibly work"
-**Avoid:** seems, appears, perhaps, possibly, maybe, sort of, kind of
+**Good:** "The bug is in the validation logic."
+**Bad:** "It seems the bug might be in the validation logic."
 
-Appropriate qualification is not hedging — it's accurate scope.
-**OK:** "This typically takes 2–5 minutes" / "Most deployments use the default config"
+**Avoid:** seems, appears, perhaps, might, could, possibly, I think, we believe
 
-### 5. Imperative Mood
+### 5. Imperative Mood for Instructions
 
-Use imperative for instructions.
+Start instructions with action verbs.
 
-**Good:** "Validate the input"
-**Bad:** "The input should be validated"
+**Good:** "Validate input before processing."
+**Bad:** "The input should be validated before processing."
 
-### 6. Concise Sentences
+### 6. One Idea Per Sentence
 
-Keep sentences short. One idea per sentence.
+Split compound sentences. Keep sentences under 20 words.
 
-**Good:** "Validate input. Log errors. Return result."
-**Bad:** "The system validates input and logs errors and returns the result."
+**Good:** "Validate input. Log errors. Return the result."
+**Bad:** "The system validates input and logs errors and returns the result to the caller."
 
-### 7. Front-Load Key Information
+## Algorithm
 
-Lead with what matters most. Readers scan before they read — put the answer before the explanation.
+**Quick reference:** `identify file type → scan each principle → collect violations → output violation list → output revised text`
 
-**Good:** "This library parses JWT tokens. Install with `npm install jwt-parse`."
-**Bad:** "This library was built to solve a common problem in modern web apps where authentication tokens need to be parsed..."
+### Step 1: Confirm Scope
 
-For READMEs: the first paragraph must answer what the project does and why someone would use it.
+If the file is a SKILL.md, command, agent, hook, or CLAUDE.md — stop and tell the user to use `ai-doc-quality` instead.
 
-### 8. Structure for Scannability
+### Step 2: Scan for Violations
 
-Use headings, bullets, and short paragraphs. A reader looking for a specific answer should find it in under 10 seconds.
+For each principle, scan the document and collect violations:
 
-- Use H2/H3 headings to segment topics
-- Use bullets for 3+ parallel items
-- Keep paragraphs to 3–5 sentences max
-- Use code blocks for any command or code snippet — never inline prose
+| Principle | Patterns to detect |
+|-----------|--------------------|
+| Active voice | "was/were/is/are/been + past participle + by" |
+| Needless words | phrases from the needless-words table |
+| Vague quantifiers | many, few, some, several, various, numerous, soon, later |
+| Hedging | seems, appears, perhaps, might, could, possibly |
+| Passive instructions | "should be [verb]ed", "must be [verb]ed" in imperative context |
+| Run-on sentences | sentences > 20 words or with 3+ conjunctions |
 
-### 9. Show, Don't Just Tell
+### Step 3: Report and Revise
 
-A working example communicates more per token than any prose description. For any feature, command, or behavior, provide a concrete example.
+Output a grouped violation list. Then output the full revised document with all fixes applied inline.
 
-**Bad:** "The library supports multiple output formats."
-**Good:**
-```
-client.export({ format: 'csv' })  // → data.csv
-client.export({ format: 'json' }) // → data.json
-```
+## Failure Modes
 
-## Application
-
-When generating human-readable markdown:
-1. Default to active voice (passive is OK when agent is unknown or irrelevant)
-2. Omit needless words
-3. Use specific numbers
-4. State directly — avoid epistemic hedging, not appropriate qualification
-5. Use imperative for instructions
-6. Keep sentences short, one idea per sentence
-7. Front-load: answer first, context second
-8. Structure for scannability with headings and bullets
-9. Show examples for any feature or behavior
+| Condition | Recovery |
+|-----------|----------|
+| File is a SKILL.md or AI-consumable doc | Stop; redirect to `ai-doc-quality` |
+| No violations found | Output "No violations found." — do not fabricate suggestions |
+| Document is too large (>500 lines) | Process in sections; note which section was reviewed |
 
 ## Examples
 
-### Example 1: Active Voice
+### Example 1: Multi-Violation Paragraph
 
-**Bad:** "The feature was implemented by the team"
-**Good:** "The team implemented the feature"
+**Input:**
+> "In order to complete the setup process, the configuration file should be edited by the user. It is important to note that many settings might need to be changed, and the process will take some time."
 
-### Example 2: Omit Needless Words
+**Violations:**
+- `"In order to"` → active voice / needless words: use "To"
+- `"should be edited by the user"` → passive voice: "Edit the configuration file"
+- `"It is important to note that"` → needless words: delete
+- `"many settings"` → vague quantifier: specify count or say "all relevant settings"
+- `"might need"` → hedging: "need"
+- `"some time"` → vague quantifier: specify or say "a few minutes"
 
-**Bad:** "In order to complete the task, we need to implement the feature"
-**Good:** "To complete the task, implement the feature"
+**Revised:**
+> "To complete setup, edit the configuration file. All relevant settings need to be updated — allow 5 minutes."
 
-### Example 3: Specific Language
+---
 
-**Bad:** "The system handles many requests quickly"
-**Good:** "The system handles 1000 requests per second"
+### Example 2: Clean Document Passes
 
-### Example 4: Direct Tone
+**Input:**
+> "Run `make test` to execute the test suite. Fix any failures before opening a PR. The CI pipeline runs the same suite on every push."
 
-**Bad:** "It seems the bug might be in the validation logic"
-**Good:** "The bug is in the validation logic"
+**Output:**
+No violations found.
 
-### Example 5: Imperative Mood
+---
 
-**Bad:** "The input should be validated before processing"
-**Good:** "Validate input before processing"
+### Example 3: Roadmap Story Cleanup
 
-### Example 6: Concise Sentences
+**Input:**
+> "Story 14 is about improvements that will be made to the onboarding flow. Various enhancements are being considered and it seems like the work could be completed soon."
 
-**Bad:** "The system validates the input and checks for errors and logs any issues that are found and returns the validation result to the caller"
-**Good:** "The system validates input, checks for errors, logs issues, and returns the result"
+**Violations:**
+- `"is about improvements that will be made"` → passive: "improves the onboarding flow"
+- `"Various enhancements are being considered"` → passive + vague: use `[describe specific enhancements]` — do NOT invent details
+- `"it seems like"` → hedging: delete
+- `"could be completed soon"` → hedging + vague temporal: use `[target milestone]` or delete
 
-### Example 7: Front-Load
+**Revised:**
+> "Story 14 improves the onboarding flow. [Describe specific enhancements.] Target: [milestone]."
 
-**Bad:** "Given the complexity of modern distributed systems and the need for reliable message delivery across unreliable networks, this library was created to..."
-**Good:** "Reliable message queue for Node.js. Handles retries, backoff, and dead-letter queues out of the box."
-
-### Example 8: Show, Don't Just Tell
-
-**Bad:** "The CLI supports several output formats for different use cases."
-**Good:**
-```sh
-$ mytool export --format csv   # outputs data.csv
-$ mytool export --format json  # outputs data.json
-$ mytool export --format table # pretty-prints to stdout
-```
+Note: placeholders signal that the author needs to supply specifics — the revision fixes style, not content.

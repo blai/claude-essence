@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "skillful-dev@altruist": true,
+    "skill-creator@claude-plugins-official": true
+  }
+}

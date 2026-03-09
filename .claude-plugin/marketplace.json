@@ -19,9 +19,17 @@
       "name": "md-quality",
       "source": "./md-quality",
       "description": "Markdown documentation quality skills — AI-consumable doc validation and human-readable doc style",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "category": "productivity",
       "tags": ["documentation", "quality", "markdown"]
+    },
+    {
+      "name": "cortex-plus",
+      "source": "./cortex-plus",
+      "description": "Cortex extensions — STM→LTM distillation and memory management skills",
+      "version": "0.2.0",
+      "category": "productivity",
+      "tags": ["cortex", "memory", "distill"]
     }
   ]
 }

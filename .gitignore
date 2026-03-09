@@ -31,3 +31,5 @@ __pycache__/
 # Local secrets / env
 .env
 .env.local
+*-workspace/
+docs/temp/

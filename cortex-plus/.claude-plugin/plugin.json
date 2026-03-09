@@ -1,0 +1,11 @@
+{
+  "name": "cortex-plus",
+  "version": "0.2.0",
+  "description": "Cortex extensions — STM→LTM distillation and memory management skills",
+  "author": {
+    "name": "Brian Lai",
+    "url": "https://github.com/blai"
+  },
+  "repository": "https://github.com/blai/claude-essence",
+  "license": "MIT"
+}
